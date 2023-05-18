@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using bug_tracker_web.Models;
 using System.Transactions;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace bug_tracker_web.Models
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<DefaultUser>
     {
-        public ApplicationDbContext(DbContextOptions options):base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
         {
             
         }
