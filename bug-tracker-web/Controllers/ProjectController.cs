@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using bug_tracker_web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace bug_tracker_web.Controllers
 {
@@ -19,6 +20,7 @@ namespace bug_tracker_web.Controllers
         }
 
         // GET: Project
+        [Authorize]
         public async Task<IActionResult> Index()
         {
               return _context.Projects != null ? 
@@ -26,7 +28,9 @@ namespace bug_tracker_web.Controllers
                           Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
         }
 
+
         // GET: Project/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -44,9 +48,12 @@ namespace bug_tracker_web.Controllers
             return View(project);
         }
 
+
         // GET: Project/Create
+        [Authorize]
         public IActionResult Create()
         {
+
             return View(new Project());
         }
 
@@ -55,6 +62,7 @@ namespace bug_tracker_web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,ProjectCreatedBy")] Project project)
         {
             if (ModelState.IsValid)
@@ -67,6 +75,7 @@ namespace bug_tracker_web.Controllers
         }
 
         // GET: Project/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -87,6 +96,7 @@ namespace bug_tracker_web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,ProjectCreatedBy")] Project project)
         {
             if (id != project.ProjectID)
@@ -118,6 +128,7 @@ namespace bug_tracker_web.Controllers
         }
 
         // GET: Project/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -138,6 +149,7 @@ namespace bug_tracker_web.Controllers
         // POST: Project/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Projects == null)

@@ -71,13 +71,13 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         var user = await UserManager.GetUserAsync(User);
-                        if (user != null)
-                        {
-                            var name = UserManager.GetUserName(User);
-                            <text>Hello @name! </text>
-                        }
+                        <span>@user.FirstName</span>
+                        <span>@user.LastName</span>
                     }
-                    
+                    else
+                    {
+                        <span>No One :(</span>
+                    }
                 </div>
             </nav>
         </div>

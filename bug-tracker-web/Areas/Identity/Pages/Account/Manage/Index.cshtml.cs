@@ -10,6 +10,7 @@ using bug_tracker_web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace bug_tracker_web.Areas.Identity.Pages.Account.Manage
 {
@@ -52,6 +53,37 @@ namespace bug_tracker_web.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public class InputModel
         {
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Specialty")]
+            public string WorkType { get; set; }
+
+            // Dropdown list options for WorkType
+            //public IEnumerable<SelectListItem> WorkTypeOptions { get; set; }
+
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Address")]
+            public string? Address { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "ZipCode")]
+            public string? ZipCode { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "City")]
+            public string City { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -70,6 +102,13 @@ namespace bug_tracker_web.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                FirstName = user.FirstName,
+                LastName =  user.LastName,
+                WorkType = user.WorkType,
+                //WorkTypeOptions = user.WorkTypeOptions,
+                Address = user.Address,
+                ZipCode = user.ZipCode,
+                City = user.City,
                 PhoneNumber = phoneNumber
             };
         }
@@ -110,6 +149,38 @@ namespace bug_tracker_web.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+
+            if (Input.FirstName != user.FirstName)
+            {
+                user.FirstName = Input.FirstName;
+            }
+
+            if (Input.LastName != user.LastName)
+            {
+                user.LastName = Input.LastName;
+            }
+
+            if (Input.WorkType != user.WorkType)
+            {
+                user.WorkType = Input.WorkType;
+            }
+
+            if (Input.City != user.City)
+            {
+                user.City = Input.City;
+            }
+
+            if (Input.Address != user.Address)
+            {
+                user.Address = Input.Address;
+            }
+
+            if (Input.ZipCode != user.ZipCode)
+            {
+                user.ZipCode = Input.ZipCode;
+            }
+
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

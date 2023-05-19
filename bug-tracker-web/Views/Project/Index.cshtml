@@ -27,9 +27,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.ProjectCreatedAt)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.ProjectCreatedBy)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -51,9 +51,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ProjectCreatedAt)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.ProjectCreatedBy)
-            </td>
+            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProjectID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ProjectID">Details</a> |

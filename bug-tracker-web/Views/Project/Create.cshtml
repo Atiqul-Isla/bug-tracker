@@ -1,4 +1,5 @@
-﻿@model bug_tracker_web.Models.Project
+﻿@page
+@model bug_tracker_web.Models.Project
 
 @{
     ViewData["Title"] = "Create";
@@ -45,12 +46,16 @@
                                 <span asp-validation-for="ProjectCreatedAt" class="text-danger"></span>
                             </div>
 
-                            <div class="mb-3">
-                                <label asp-for="ProjectCreatedBy" class="form-label">Created By</label>
-                                <input asp-for="ProjectCreatedBy" class="form-control" />
-                                <span asp-validation-for="ProjectCreatedBy" class="text-danger"></span>
+                            @*<div class="mb-3">
+                                <label asp-for="ProjectCreatedByUserId" class="form-label">Created By</label>
+                                <select asp-for="ProjectCreatedByUserId" asp-items="Model.UserOptions" class="form-control"></select>
+                                <span asp-validation-for="ProjectCreatedByUserId" class="text-danger"></span>
                             </div>
-
+                            <div class="mb-3">
+                                <label asp-for="AssignedUsers" class="form-label">Assigned Users</label>
+                                <select asp-for="AssignedUsers" asp-items="Model.UserOptions" multiple class="form-control"></select>
+                                <span asp-validation-for="AssignedUsers" class="text-danger"></span>
+                            </div>*@
                             <div class="d-grid gap-2">
                                 <input type="submit" value="Create" class="btn btn-primary btn-lg" />
                             </div>
