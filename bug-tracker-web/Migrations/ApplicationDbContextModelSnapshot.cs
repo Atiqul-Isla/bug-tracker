@@ -164,10 +164,6 @@ namespace bug_tracker_web.Migrations
                     b.Property<DateTime>("ProjectCreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ProjectCreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("ProjectDescription")
                         .HasColumnType("nvarchar(300)");
 

@@ -12,8 +12,8 @@ using bug_tracker_web.Models;
 namespace bug_tracker_web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230519020010_DetailedIdentityMigration")]
-    partial class DetailedIdentityMigration
+    [Migration("20230519232455_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -165,10 +165,6 @@ namespace bug_tracker_web.Migrations
 
                     b.Property<DateTime>("ProjectCreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ProjectCreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ProjectDescription")
                         .HasColumnType("nvarchar(300)");

@@ -29,10 +29,5 @@ namespace bug_tracker_web.Models
 
         [PersonalData]
         public Boolean IsOnline { get; set; }
-        //public Boolean AssignedTo { get; set; } 
-
-     
-        //public ICollection<Project> CreatedProjects { get; set; } // Collection of projects created by the user
-        //public ICollection<Project> AssignedProjects { get; set; } // Collection of projects assigned to the user
     }
 }
