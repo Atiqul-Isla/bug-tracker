@@ -4,62 +4,79 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<section class="intro">
+    <div class="bg-image h-100" style="background-color: #FFFF;">
+        <div class="mask d-flex align-items-center h-100">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="card shadow-2-strong" style="background-color: #f5f7fa;">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-borderless mb-0" style="margin: 0 auto;">
+                                       
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        Select
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.ProjectName)
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.ProjectType)
+                                                    </th>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectVersion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectCreatedAt)
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.ProjectCreatedBy)
-            </th>*@
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectVersion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectCreatedAt)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.ProjectCreatedBy)
-            </td>*@
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProjectID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProjectID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProjectID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.ProjectVersion)
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.ProjectCreatedAt)
+                                                    </th>
+                                                    <th>
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model)
+                                                {
+
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" checked />
+                                                            </div>
+                                                        </th>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProjectName)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProjectType)
+                                                        </td>
+
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProjectVersion)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProjectCreatedAt)
+                                                        </td>
+                                                        <td>
+                                                            <a asp-action="Edit" asp-route-id="@item.ProjectID">Edit</a> |
+                                                            <a asp-action="Details" asp-route-id="@item.ProjectID">Details</a> |
+                                                            <a asp-action="Delete" asp-route-id="@item.ProjectID">Delete</a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                  
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

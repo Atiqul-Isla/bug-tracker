@@ -9,17 +9,22 @@ namespace bug_tracker_web.Models
         public int ProjectID { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
+        [Display(Name = "Name")]
         public string ProjectName { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
+        [Display(Name = "Type")]
         public string ProjectType { get; set; }
 
         [Column(TypeName = "nvarchar(300)")]
+        [Display(Name = "Description")]
         public string? ProjectDescription { get; set; }
 
         [Column(TypeName = "nvarchar(10)")]
+        [Display(Name = "Version")]
         public string ProjectVersion { get; set; }
 
+        [Display(Name = "Creation Date")]
         public DateTime ProjectCreatedAt { get; set; } = DateTime.Now;
 
 
