@@ -53,9 +53,9 @@
             </td>
                 <td>
                     <ul>
-                        @foreach (var projectUser in item.ProjectUsers)
+                        @foreach (var user in item.ProjectUsers)
                         {
-                            <li>@projectUser.User.UserName</li>
+                            <li>@user.User.UserName</li>
                         }
                     </ul>
                 </td>

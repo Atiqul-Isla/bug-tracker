@@ -32,5 +32,8 @@ namespace bug_tracker_web.Models
         //Many-Many
         public List<ProjectUser> ProjectUsers { get; set; } = new List<ProjectUser>();
 
+        [NotMapped]
+        public List<string> SelectedUserIds { get; set; } = new List<string>();
+
     }
 }

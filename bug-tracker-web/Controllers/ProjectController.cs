@@ -48,7 +48,7 @@ namespace bug_tracker_web.Controllers
         public IActionResult Create()
         {
             var users = _context.Users.Include(u => u.ProjectUsers).ToList();
-            ViewData["ProjectUsers"] = new MultiSelectList(users, "Id", "UserName");
+            ViewData["ProjectUsers"] = new SelectList(users, "Id", "UserName");
 
             //ViewBag.UserId = new MultiSelectList(_context.Users, "Id", "UserName");
             return View();
@@ -59,19 +59,20 @@ namespace bug_tracker_web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,ProjectUsers")] Project project, List<string> selectedUserIds)
+        public async Task<IActionResult> Create([Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,ProjectUsers,SelectedUserIds")] Project project)
         {
             if (ModelState.IsValid)
             {
-                // Populate ProjectUsers using selectedUserIds
-                project.ProjectUsers = selectedUserIds.Select(userId => new ProjectUser { UserId = userId }).ToList();
+                // Populate ProjectUsers using SelectedUserIds
+                project.ProjectUsers = project.SelectedUserIds
+                    .Select(userId => new ProjectUser { UserId = userId })
+                    .ToList();
 
+                // Save the project to the database
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            // If the model state is not valid, return the view with the project model
             return View(project);
         }
 

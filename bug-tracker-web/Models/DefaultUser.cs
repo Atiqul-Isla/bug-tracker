@@ -31,6 +31,7 @@ namespace bug_tracker_web.Models
         public Boolean IsOnline { get; set; }
 
         //Many-Many
+        [InverseProperty("User")]
         public List<ProjectUser> ProjectUsers { get; set; }
     }
 }

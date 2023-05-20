@@ -2,6 +2,7 @@
 using bug_tracker_web.Models;
 using System.Transactions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace bug_tracker_web.Models
 {
@@ -20,7 +21,10 @@ namespace bug_tracker_web.Models
                 pu.UserId
             });
 
-            base.OnModelCreating(builder);
+            builder.Entity<Project>()
+        .HasMany(p => p.Bugs)
+        .WithOne(b => b.Project)
+        .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<ProjectUser>().HasOne(p => p.Project).WithMany(pu => pu.ProjectUsers).HasForeignKey(p => p.ProjectId);
             builder.Entity<ProjectUser>().HasOne(p => p.User).WithMany(pu => pu.ProjectUsers).HasForeignKey(p => p.UserId);

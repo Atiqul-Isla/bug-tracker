@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bug_tracker_web.Models;
 
@@ -11,9 +12,10 @@ using bug_tracker_web.Models;
 namespace bug_tracker_web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230520063358_ManyToManyTest2")]
+    partial class ManyToManyTest2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +56,6 @@ namespace bug_tracker_web.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("ProjectID")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("BugId");
@@ -343,9 +344,7 @@ namespace bug_tracker_web.Migrations
                 {
                     b.HasOne("bug_tracker_web.Models.Project", "Project")
                         .WithMany("Bugs")
-                        .HasForeignKey("ProjectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProjectID");
 
                     b.Navigation("Project");
                 });
