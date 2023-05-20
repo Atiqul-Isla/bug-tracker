@@ -21,9 +21,12 @@ namespace bug_tracker_web.Controllers
         // GET: Project
         public async Task<IActionResult> Index()
         {
-              return _context.Projects != null ? 
-                          View(await _context.Projects.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
+            var projects = await _context.Projects
+             .Include(p => p.ProjectUsers)
+             .ThenInclude(pu => pu.User)
+             .ToListAsync();
+
+            return View(projects);
         }
 
         // GET: Project/Details/5
@@ -47,19 +50,16 @@ namespace bug_tracker_web.Controllers
         // GET: Project/Create
         public IActionResult Create()
         {
-            var users = _context.Users.Include(u => u.ProjectUsers).ToList();
-            ViewData["ProjectUsers"] = new SelectList(users, "Id", "UserName");
+            var users = _context.Users.ToList();
+            ViewData["ProjectUsers"] = new MultiSelectList(users, "Id", "UserName");
 
-            //ViewBag.UserId = new MultiSelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
         // POST: Project/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,ProjectUsers,SelectedUserIds")] Project project)
+        public async Task<IActionResult> Create([Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,SelectedUserIds")] Project project)
         {
             if (ModelState.IsValid)
             {
@@ -73,6 +73,10 @@ namespace bug_tracker_web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            var users = _context.Users.ToList();
+            ViewData["ProjectUsers"] = new SelectList(users, "Id", "UserName");
+
             return View(project);
         }
 
