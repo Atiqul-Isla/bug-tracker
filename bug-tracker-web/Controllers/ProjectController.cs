@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using bug_tracker_web.Models;
+using bug_tracker_web.ViewModel;
 
 namespace bug_tracker_web.Controllers
 {
@@ -34,14 +35,22 @@ namespace bug_tracker_web.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects
-                .FirstOrDefaultAsync(m => m.ProjectID == id);
+            var project = await _context.Projects.FirstOrDefaultAsync(m => m.ProjectID == id);
+            var bugs = await _context.Bugs.Where(b => b.ProjectID == id).ToListAsync();
+
+            var viewModel = new ProjectDetailsViewModel
+            {
+                Project = project,
+                Bugs = bugs
+            };
+
+
             if (project == null)
             {
                 return NotFound();
             }
 
-            return View(project);
+            return View(viewModel);
         }
 
         // GET: Project/Create
