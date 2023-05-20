@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bug_tracker_web.Models;
 
@@ -11,9 +12,10 @@ using bug_tracker_web.Models;
 namespace bug_tracker_web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230520044515_OneProjectToManyBugs")]
+    partial class OneProjectToManyBugs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,12 +55,7 @@ namespace bug_tracker_web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("ProjectID")
-                        .HasColumnType("int");
-
                     b.HasKey("BugId");
-
-                    b.HasIndex("ProjectID");
 
                     b.ToTable("Bugs");
                 });
@@ -161,6 +158,9 @@ namespace bug_tracker_web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectID"), 1L, 1);
 
+                    b.Property<int?>("BugID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ProjectCreatedAt")
                         .HasColumnType("datetime2");
 
@@ -181,22 +181,9 @@ namespace bug_tracker_web.Migrations
 
                     b.HasKey("ProjectID");
 
+                    b.HasIndex("BugID");
+
                     b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("bug_tracker_web.Models.ProjectUser", b =>
-                {
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ProjectId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProjectUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -336,32 +323,13 @@ namespace bug_tracker_web.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("bug_tracker_web.Models.Bug", b =>
+            modelBuilder.Entity("bug_tracker_web.Models.Project", b =>
                 {
-                    b.HasOne("bug_tracker_web.Models.Project", "Project")
-                        .WithMany("Bugs")
-                        .HasForeignKey("ProjectID");
+                    b.HasOne("bug_tracker_web.Models.Bug", "Bug")
+                        .WithMany("Projects")
+                        .HasForeignKey("BugID");
 
-                    b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("bug_tracker_web.Models.ProjectUser", b =>
-                {
-                    b.HasOne("bug_tracker_web.Models.Project", "Project")
-                        .WithMany("ProjectUsers")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("bug_tracker_web.Models.DefaultUser", "User")
-                        .WithMany("ProjectUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-
-                    b.Navigation("User");
+                    b.Navigation("Bug");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -415,16 +383,9 @@ namespace bug_tracker_web.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("bug_tracker_web.Models.DefaultUser", b =>
+            modelBuilder.Entity("bug_tracker_web.Models.Bug", b =>
                 {
-                    b.Navigation("ProjectUsers");
-                });
-
-            modelBuilder.Entity("bug_tracker_web.Models.Project", b =>
-                {
-                    b.Navigation("Bugs");
-
-                    b.Navigation("ProjectUsers");
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }

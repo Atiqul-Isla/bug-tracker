@@ -9,10 +9,6 @@ namespace bug_tracker_web.Models
         [Key]
         public int BugId { get; set; }
 
-        //ProjectID
-        public int ProjectID { get; set; }  
-        public Project Project { get; set; }
-
         [Column(TypeName = "nvarchar(50)")]
         public string BugName { get; set; }
 
@@ -30,6 +26,10 @@ namespace bug_tracker_web.Models
         //AssignedTo
 
         [Column(TypeName = "nvarchar(500)")]
-        public string BugDescription { get; set; }  
+        public string BugDescription { get; set; }
+
+        public int? ProjectID { get; set; }
+        public Project Project { get; set; }
+
     }
 }

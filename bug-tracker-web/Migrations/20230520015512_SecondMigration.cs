@@ -4,7 +4,7 @@
 
 namespace bug_tracker_web.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class SecondMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

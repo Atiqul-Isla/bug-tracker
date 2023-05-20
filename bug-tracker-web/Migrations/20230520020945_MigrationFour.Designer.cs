@@ -12,8 +12,8 @@ using bug_tracker_web.Models;
 namespace bug_tracker_web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230519232455_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230520020945_MigrationFour")]
+    partial class MigrationFour
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

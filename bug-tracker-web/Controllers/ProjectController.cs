@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using bug_tracker_web.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace bug_tracker_web.Controllers
 {
@@ -20,7 +19,6 @@ namespace bug_tracker_web.Controllers
         }
 
         // GET: Project
-        [Authorize]
         public async Task<IActionResult> Index()
         {
               return _context.Projects != null ? 
@@ -28,9 +26,7 @@ namespace bug_tracker_web.Controllers
                           Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
         }
 
-
         // GET: Project/Details/5
-        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -48,13 +44,14 @@ namespace bug_tracker_web.Controllers
             return View(project);
         }
 
-
         // GET: Project/Create
-        [Authorize]
         public IActionResult Create()
         {
+            var users = _context.Users.Include(u => u.ProjectUsers).ToList();
+            ViewData["ProjectUsers"] = new MultiSelectList(users, "Id", "UserName");
 
-            return View(new Project());
+            //ViewBag.UserId = new MultiSelectList(_context.Users, "Id", "UserName");
+            return View();
         }
 
         // POST: Project/Create
@@ -62,20 +59,23 @@ namespace bug_tracker_web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Create([Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,ProjectCreatedBy")] Project project)
+        public async Task<IActionResult> Create([Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,ProjectUsers")] Project project, List<string> selectedUserIds)
         {
             if (ModelState.IsValid)
             {
+                // Populate ProjectUsers using selectedUserIds
+                project.ProjectUsers = selectedUserIds.Select(userId => new ProjectUser { UserId = userId }).ToList();
+
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // If the model state is not valid, return the view with the project model
             return View(project);
         }
 
         // GET: Project/Edit/5
-        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -96,8 +96,7 @@ namespace bug_tracker_web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,ProjectCreatedBy")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt")] Project project)
         {
             if (id != project.ProjectID)
             {
@@ -128,7 +127,6 @@ namespace bug_tracker_web.Controllers
         }
 
         // GET: Project/Delete/5
-        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -149,7 +147,6 @@ namespace bug_tracker_web.Controllers
         // POST: Project/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Projects == null)

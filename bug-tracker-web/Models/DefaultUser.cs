@@ -29,5 +29,8 @@ namespace bug_tracker_web.Models
 
         [PersonalData]
         public Boolean IsOnline { get; set; }
+
+        //Many-Many
+        public List<ProjectUser> ProjectUsers { get; set; }
     }
 }

@@ -27,15 +27,10 @@ namespace bug_tracker_web.Models
         [Display(Name = "Creation Date")]
         public DateTime ProjectCreatedAt { get; set; } = DateTime.Now;
 
+        public ICollection<Bug> Bugs { get; set; } = new List<Bug>();
 
-        //    [Column(TypeName = "nvarchar(450)")] // Change the type to match the ID type of DefaultUser
-        //    public string ProjectCreatedByUserId { get; set; }  // FK to identify the user who created the project
+        //Many-Many
+        public List<ProjectUser> ProjectUsers { get; set; } = new List<ProjectUser>();
 
-
-        //    [ForeignKey(nameof(ProjectCreatedByUserId))]
-        //    public DefaultUser ProjectCreatedByUser { get; set; } // Navigation property to access the user who created the project
-
-        //    public ICollection<DefaultUser> AssignedUsers { get; set; } // Collection of users assigned to the project
-        //}
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bug_tracker_web.Models;
 
@@ -11,9 +12,10 @@ using bug_tracker_web.Models;
 namespace bug_tracker_web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230520045906_FlippedDataMigration")]
+    partial class FlippedDataMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,21 +186,6 @@ namespace bug_tracker_web.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("bug_tracker_web.Models.ProjectUser", b =>
-                {
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ProjectId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProjectUser");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -345,25 +332,6 @@ namespace bug_tracker_web.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("bug_tracker_web.Models.ProjectUser", b =>
-                {
-                    b.HasOne("bug_tracker_web.Models.Project", "Project")
-                        .WithMany("ProjectUsers")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("bug_tracker_web.Models.DefaultUser", "User")
-                        .WithMany("ProjectUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -415,16 +383,9 @@ namespace bug_tracker_web.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("bug_tracker_web.Models.DefaultUser", b =>
-                {
-                    b.Navigation("ProjectUsers");
-                });
-
             modelBuilder.Entity("bug_tracker_web.Models.Project", b =>
                 {
                     b.Navigation("Bugs");
-
-                    b.Navigation("ProjectUsers");
                 });
 #pragma warning restore 612, 618
         }

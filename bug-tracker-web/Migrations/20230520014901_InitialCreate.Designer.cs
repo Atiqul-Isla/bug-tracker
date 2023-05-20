@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bug_tracker_web.Models;
 
@@ -11,9 +12,10 @@ using bug_tracker_web.Models;
 namespace bug_tracker_web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230520014901_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +55,7 @@ namespace bug_tracker_web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("ProjectID")
+                    b.Property<int>("ProjectID")
                         .HasColumnType("int");
 
                     b.HasKey("BugId");
@@ -186,13 +188,22 @@ namespace bug_tracker_web.Migrations
 
             modelBuilder.Entity("bug_tracker_web.Models.ProjectUser", b =>
                 {
+                    b.Property<int>("ProjectUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectUserId"), 1L, 1);
+
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ProjectId", "UserId");
+                    b.HasKey("ProjectUserId");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasIndex("UserId");
 
@@ -339,8 +350,10 @@ namespace bug_tracker_web.Migrations
             modelBuilder.Entity("bug_tracker_web.Models.Bug", b =>
                 {
                     b.HasOne("bug_tracker_web.Models.Project", "Project")
-                        .WithMany("Bugs")
-                        .HasForeignKey("ProjectID");
+                        .WithMany()
+                        .HasForeignKey("ProjectID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Project");
                 });
@@ -348,13 +361,13 @@ namespace bug_tracker_web.Migrations
             modelBuilder.Entity("bug_tracker_web.Models.ProjectUser", b =>
                 {
                     b.HasOne("bug_tracker_web.Models.Project", "Project")
-                        .WithMany("ProjectUsers")
+                        .WithMany("AssignedUsers")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("bug_tracker_web.Models.DefaultUser", "User")
-                        .WithMany("ProjectUsers")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -415,16 +428,9 @@ namespace bug_tracker_web.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("bug_tracker_web.Models.DefaultUser", b =>
-                {
-                    b.Navigation("ProjectUsers");
-                });
-
             modelBuilder.Entity("bug_tracker_web.Models.Project", b =>
                 {
-                    b.Navigation("Bugs");
-
-                    b.Navigation("ProjectUsers");
+                    b.Navigation("AssignedUsers");
                 });
 #pragma warning restore 612, 618
         }
