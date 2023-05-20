@@ -21,10 +21,7 @@ namespace bug_tracker_web.Controllers
         // GET: Project
         public async Task<IActionResult> Index()
         {
-            var projects = await _context.Projects
-             .Include(p => p.ProjectUsers)
-             .ThenInclude(pu => pu.User)
-             .ToListAsync();
+            var projects = await _context.Projects.Include(p => p.ProjectUsers).ThenInclude(pu => pu.User).ToListAsync();
 
             return View(projects);
         }
@@ -64,9 +61,7 @@ namespace bug_tracker_web.Controllers
             if (ModelState.IsValid)
             {
                 // Populate ProjectUsers using SelectedUserIds
-                project.ProjectUsers = project.SelectedUserIds
-                    .Select(userId => new ProjectUser { UserId = userId })
-                    .ToList();
+                project.ProjectUsers = project.SelectedUserIds.Select(userId => new ProjectUser { UserId = userId }).ToList();
 
                 // Save the project to the database
                 _context.Add(project);

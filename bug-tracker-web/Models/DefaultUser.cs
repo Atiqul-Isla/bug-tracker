@@ -33,5 +33,8 @@ namespace bug_tracker_web.Models
         //Many-Many
         [InverseProperty("User")]
         public List<ProjectUser> ProjectUsers { get; set; }
+
+        [InverseProperty("User")]
+        public List<BugUser> BugUsers { get; set; }
     }
 }

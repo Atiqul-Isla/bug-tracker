@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<bug_tracker_web.Models.Bug>
 
+
 @{
     ViewData["Title"] = "Index";
 }
@@ -33,6 +34,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Project)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BugUsers)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -59,6 +63,14 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Project.ProjectID)
+            </td>
+            <td>
+                <ul>
+                    @foreach (var bugUser in item.BugUsers)
+                    {
+                        <li>@bugUser.User.UserName</li>
+                    }
+                </ul>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.BugId">Edit</a> |

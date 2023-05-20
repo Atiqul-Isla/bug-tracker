@@ -21,8 +21,9 @@ namespace bug_tracker_web.Controllers
         // GET: Bug
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Bugs.Include(b => b.Project);
-            return View(await applicationDbContext.ToListAsync());
+            var bugs = await _context.Bugs.Include(b => b.Project).Include(b => b.BugUsers).ThenInclude(bu => bu.User).ToListAsync();
+
+            return View(bugs);
         }
 
         // GET: Bug/Details/5
@@ -48,20 +49,33 @@ namespace bug_tracker_web.Controllers
         public IActionResult Create()
         {
             ViewData["ProjectID"] = new SelectList(_context.Projects, "ProjectID", "ProjectID");
+            var users = _context.Users.ToList();
+            ViewData["BugUsers"] = new MultiSelectList(users, "Id", "UserName");
             return View();
         }
 
-
+        // POST: Bug/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BugId,BugName,BugStatus,BugSeverity,BugCreatedBy,BugCreatedAt,BugDescription,ProjectID")] Bug bug)
+        public async Task<IActionResult> Create([Bind("BugId,BugName,BugStatus,BugSeverity,BugCreatedBy,BugCreatedAt,BugDescription,ProjectID, SelectedUserIds")] Bug bug)
         {
-            
+           
+
+            // Populate ProjectUsers using SelectedUserIds
+            bug.BugUsers = bug.SelectedUserIds.Select(userId => new BugUser { UserId = userId }).ToList();
+
             _context.Add(bug);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-            
+      
 
+            ViewData["ProjectID"] = new SelectList(_context.Projects, "ProjectID", "ProjectID", bug.ProjectID);
+            var users = _context.Users.ToList();
+            ViewData["BugUsers"] = new MultiSelectList(users, "Id", "UserName");
+
+            return View(bug);
         }
 
         // GET: Bug/Edit/5

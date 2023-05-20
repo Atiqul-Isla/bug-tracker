@@ -23,13 +23,16 @@ namespace bug_tracker_web.Models
 
         public DateTime BugCreatedAt { get; set; } = DateTime.Now;
 
-        //AssignedTo
-
         [Column(TypeName = "nvarchar(500)")]
         public string BugDescription { get; set; }
 
+        //Relationships
         public int? ProjectID { get; set; }
         public Project Project { get; set; }
 
+        public List<BugUser> BugUsers { get; set; }
+
+        [NotMapped]
+        public List<string> SelectedUserIds { get; set; } = new List<string>();
     }
 }
