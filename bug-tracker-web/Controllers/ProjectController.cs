@@ -22,7 +22,7 @@ namespace bug_tracker_web.Controllers
         // GET: Project
         public async Task<IActionResult> Index()
         {
-            var projects = await _context.Projects.Include(p => p.ProjectUsers).ThenInclude(pu => pu.User).ToListAsync();
+            var projects = await _context.Projects.Include(b => b.Bugs).Include(p => p.ProjectUsers).ThenInclude(pu => pu.User).ToListAsync();
 
             return View(projects);
         }

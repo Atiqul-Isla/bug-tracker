@@ -6,54 +6,79 @@
 
 <h1>Details</h1>
 
-<div>
-    <h4>Project</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.ProjectName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.ProjectName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.ProjectType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.ProjectType)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.ProjectDescription)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.ProjectDescription)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.ProjectVersion)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.ProjectVersion)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.ProjectCreatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.ProjectCreatedAt)
-        </dd>
-    </dl>
+<div class="row">
+    <div class="col-md-6">
+        <div class="bug-list">
+            <h3>Current Bugs</h3>
+            <ul>
+                @foreach (var bug in Model.Bugs)
+                {
+                    <li class="bug-item" data-bugid="@bug.BugId">
+                        @bug.BugName
+                    </li>
+
+                    <!-- Display other bug properties as needed -->
+                    <li class="bug-item" data-bugid="@bug.BugId">
+                        @bug.BugName
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="project-details">
+            <h4>Project</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Project.ProjectName)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Project.ProjectName)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Project.ProjectType)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Project.ProjectType)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Project.ProjectDescription)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Project.ProjectDescription)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Project.ProjectVersion)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Project.ProjectVersion)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Project.ProjectCreatedAt)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Project.ProjectCreatedAt)
+                </dd>
+            </dl>
+        </div>
+    </div>
 </div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Project.ProjectID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
-<div>
-    <h3>Current Bugs</h3>
-    <ul>
-        @foreach (var bug in Model.Bugs)
-        {
-            <li>@bug.BugName</li>
-            <!-- Display other bug properties as needed -->
-        }
-    </ul>
-</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('.bug-item').click(function () {
+                var bugId = $(this).data('bugid');
+                // Add your code to expand the bug card and show bug details
+                // You can use AJAX to fetch and display the bug details dynamically
+            });
+        });
+    </script>
+}
 

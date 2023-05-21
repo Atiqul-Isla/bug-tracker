@@ -1,70 +1,248 @@
-﻿@model IEnumerable<bug_tracker_web.Models.Project>
+﻿@using Microsoft.AspNetCore.Identity
+
+@model IEnumerable<bug_tracker_web.Models.Project>
+@inject UserManager<DefaultUser> _userManager
+
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectVersion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectCreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectUsers)
-            </th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectVersion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectCreatedAt)
-            </td>
-                <td>
-                    <ul>
-                        @foreach (var projectUser in item.ProjectUsers)
-                        {
-                            <li>@projectUser.User.UserName</li>
-                        }
-                    </ul>
-                </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProjectID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProjectID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProjectID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<section class="intro">
+    <div class="bg-image" style="background-color: #FFFF;">
+        <div class="mask d-flex align-items-center h-100">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 mb-4">
+                            <div class="card shadow-2-strong mb-4" style="background-color: #f5f7fa;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <h2 class="mb-0">My Projects</h2>
+                                        <div class="d-flex align-items-center">
+                                            <div class="input-group me-2">
+                                                <button class="btn btn-outline-secondary" type="button">
+                                                    <i class="bi bi-search"></i>
+                                                </button>
+                                                <input type="text" class="form-control" id="searchInput" placeholder="Search">
+
+                                            </div>
+                                            <button class="btn btn-danger me-2"><i class="bi bi-trash"></i></button>
+                                            <button class="btn btn-success">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.ProjectName)
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.ProjectType)
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.ProjectVersion)
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.ProjectCreatedAt)
+                                                    </th>
+                                                    <th>
+                                                        @Html.DisplayNameFor(model => model.ProjectUsers)
+                                                    </th>
+                                                    <th>Actions</th>
+                                                    <th>
+
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach (var item in Model.Where(p => p.ProjectUsers.Any(pu => pu.UserId == _userManager.GetUserId(User))))
+                                            {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProjectName)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProjectType)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProjectVersion)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProjectCreatedAt)
+                                                        </td>
+                                                        <td>
+                                                            @foreach (var projectUser in item.ProjectUsers)
+                                                            {
+                                                                <span class="badge badge-lightblue text-dark">@projectUser.User.FirstName @projectUser.User.LastName</span>
+                                                            }
+                                                        </td>
+                                                        <td class="text-decoration-none">
+                                                            <a asp-action="Edit" asp-route-id="@item.ProjectID" class="text-decoration-none">
+                                                                <span class="btn btn-primary btn-sm text-decoration-none">
+                                                                    <i class="bi bi-pencil-fill"></i>
+                                                                </span>
+                                                            </a>
+                                                            <a asp-action="Details" asp-route-id="@item.ProjectID" class="text-decoration-none">
+                                                                <span class="btn btn-warning btn-sm text-decoration-none">
+                                                                    <i class="bi bi-info-circle-fill"></i>
+                                                                </span>
+                                                            </a>
+                                                            <a asp-action="Delete" asp-route-id="@item.ProjectID" class="text-decoration-none">
+                                                                <span class="btn btn-secondary btn-sm">
+                                                                    <i class="bi bi-x-lg text-white"></i>
+                                                                </span>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            @if (item.Bugs.Any())
+                                                            {
+                                                                <span class="badge bg-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Project contains issues">
+                                                                    <i class="bi bi-exclamation-circle"></i>
+                                                                </span>
+
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                         
+                        <div class="card shadow-2-strong" style="background-color: #f5f7fa;">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h2 class="mb-0">All Projects</h2>
+                                    <div class="d-flex align-items-center">
+                                        <div class="input-group me-2">
+                                            <button class="btn btn-outline-secondary" type="button">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <input type="text" class="form-control" id="searchInput" placeholder="Search">
+                                           
+                                        </div>
+                                        <button class="btn btn-danger me-2"><i class="bi bi-trash"></i></button>
+                                        <button class="btn btn-success">
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.ProjectName)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.ProjectType)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.ProjectVersion)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.ProjectCreatedAt)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.ProjectUsers)
+                                                </th>
+                                                <th>Actions</th>
+                                                <th>
+
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ProjectName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ProjectType)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ProjectVersion)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ProjectCreatedAt)
+                                                    </td>
+                                                    <td>
+                                                        @foreach (var projectUser in item.ProjectUsers)
+                                                        {
+                                                            <span class="badge badge-lightblue text-dark">@projectUser.User.FirstName @projectUser.User.LastName</span>
+                                                        }
+                                                    </td>
+                                                    <td class="text-decoration-none">
+                                                        <a asp-action="Edit" asp-route-id="@item.ProjectID" class="text-decoration-none">
+                                                            <span class="btn btn-primary btn-sm text-decoration-none">
+                                                                <i class="bi bi-pencil-fill"></i>
+                                                            </span>
+                                                        </a>
+                                                        <a asp-action="Details" asp-route-id="@item.ProjectID" class="text-decoration-none">
+                                                            <span class="btn btn-warning btn-sm text-decoration-none">
+                                                                <i class="bi bi-info-circle-fill"></i>
+                                                            </span>
+                                                        </a>
+                                                        <a asp-action="Delete" asp-route-id="@item.ProjectID" class="text-decoration-none">
+                                                            <span class="btn btn-secondary btn-sm">
+                                                                <i class="bi bi-x-lg text-white"></i>
+                                                            </span>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        @if (item.Bugs.Any())
+                                                        {
+                                                            <span class="badge bg-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Project contains issues">
+                                                                <i class="bi bi-exclamation-circle"></i>
+                                                            </span>
+
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .badge-lightblue {
+        background-color: #ADD8E6;
+    }
+
+    .tooltip .tooltip-inner {
+        background-color: #000;
+        color: #fff;
+        border-radius: 4px;
+    }
+
+    .tooltip.bs-tooltip-top .arrow::before,
+    .tooltip .arrow::before {
+        border-top-color: #000;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $("#searchInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".project-row").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>
