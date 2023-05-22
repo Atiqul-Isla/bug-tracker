@@ -5,79 +5,111 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<section class="intro">
+	<div class="bg-image" style="background-color: #FFFF;">
+		<div class="mask d-flex align-items-center h-100">
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-12 mb-4">
+						<div class="card shadow-2-strong mb-4" style="background-color: #f5f7fa;">
+							<div class="card-body">
+								<div class="d-flex justify-content-between align-items-center mb-4">
+									<h2 class="mb-0">My Projects</h2>
+									<div class="d-flex align-items-center">
+										<div class="input-group me-2">
+											<button class="btn btn-outline-secondary" type="button">
+												<i class="bi bi-search"></i>
+											</button>
+											<input type="text" class="form-control" id="searchInput" placeholder="Search">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BugName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BugStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BugSeverity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BugCreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BugCreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BugDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Project)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BugUsers)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BugName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BugStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BugSeverity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BugCreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BugCreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BugDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project.ProjectID)
-            </td>
-            <td>
-                <ul>
-                    @foreach (var bugUser in item.BugUsers)
-                    {
-                        <li>@bugUser.User.UserName</li>
-                    }
-                </ul>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BugId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BugId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BugId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+										</div>
+										<button class="btn btn-danger me-2"><i class="bi bi-trash"></i></button>
+										<a asp-action="Create" class="btn btn-success">
+											<i class="bi bi-plus"></i>
+										</a>
+									</div>
+								</div>
+								<div class="table-responsive">
+									<table class="table">
+										<thead>
+											<tr>
+												<th>
+													@Html.DisplayNameFor(model => model.BugName)
+												</th>
+												<th>
+													@Html.DisplayNameFor(model => model.BugStatus)
+												</th>
+												<th>
+													@Html.DisplayNameFor(model => model.BugSeverity)
+												</th>
+												<th>
+													@Html.DisplayNameFor(model => model.BugCreatedBy)
+												</th>
+												<th>
+													@Html.DisplayNameFor(model => model.BugCreatedAt)
+												</th>
+												<th>
+													@Html.DisplayNameFor(model => model.BugDescription)
+												</th>
+												<th>
+													@Html.DisplayNameFor(model => model.Project)
+												</th>
+												<th>
+													@Html.DisplayNameFor(model => model.BugUsers)
+												</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach (var item in Model)
+											{
+												<tr>
+													<td>
+														@Html.DisplayFor(modelItem => item.BugName)
+													</td>
+													<td>
+														@Html.DisplayFor(modelItem => item.BugStatus)
+													</td>
+													<td>
+														@Html.DisplayFor(modelItem => item.BugSeverity)
+													</td>
+													<td>
+														@Html.DisplayFor(modelItem => item.BugCreatedBy)
+													</td>
+													<td>
+														@Html.DisplayFor(modelItem => item.BugCreatedAt)
+													</td>
+													<td>
+														@Html.DisplayFor(modelItem => item.BugDescription)
+													</td>
+													<td>
+														@Html.DisplayFor(modelItem => item.Project.ProjectID)
+													</td>
+													<td>
+														<ul>
+															@foreach (var bugUser in item.BugUsers)
+															{
+																<li>@bugUser.User.UserName</li>
+															}
+														</ul>
+													</td>
+													<td>
+														<a asp-action="Edit" asp-route-id="@item.BugId">Edit</a> |
+														<a asp-action="Details" asp-route-id="@item.BugId">Details</a> |
+														<a asp-action="Delete" asp-route-id="@item.BugId">Delete</a>
+													</td>
+												</tr>
+											}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

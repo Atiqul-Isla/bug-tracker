@@ -4,52 +4,55 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<div class="container">
+	<div class="edit-page  border rounded p-4" style="background-color: #f5f7fa;">
+		<h1 class="mb-4">Create</h1>
 
-<h4>Project</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ProjectName" class="control-label"></label>
-                <input asp-for="ProjectName" class="form-control" />
-                <span asp-validation-for="ProjectName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProjectType" class="control-label"></label>
-                <input asp-for="ProjectType" class="form-control" />
-                <span asp-validation-for="ProjectType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProjectDescription" class="control-label"></label>
-                <input asp-for="ProjectDescription" class="form-control" />
-                <span asp-validation-for="ProjectDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProjectVersion" class="control-label"></label>
-                <input asp-for="ProjectVersion" class="form-control" />
-                <span asp-validation-for="ProjectVersion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProjectCreatedAt" class="control-label"></label>
-                <input asp-for="ProjectCreatedAt" class="form-control" />
-                <span asp-validation-for="ProjectCreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SelectedUserIds" class="control-label"></label>
-                <select asp-for="SelectedUserIds" class="form-control" asp-items="ViewBag.ProjectUsers"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+		<div class="project-details">
+			<hr />
 
-<div>
-    <a asp-action="Index">Back to List</a>
+			<div class="row">
+				<div class="col-md-6">
+					<form asp-action="Create">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+						<div class="form-group">
+							<label asp-for="ProjectName" class="control-label"></label>
+							<input asp-for="ProjectName" class="form-control" />
+							<span asp-validation-for="ProjectName" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="ProjectType" class="control-label"></label>
+							<input asp-for="ProjectType" class="form-control" />
+							<span asp-validation-for="ProjectType" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="ProjectDescription" class="control-label"></label>
+							<input asp-for="ProjectDescription" class="form-control" />
+							<span asp-validation-for="ProjectDescription" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="ProjectVersion" class="control-label"></label>
+							<input asp-for="ProjectVersion" class="form-control" />
+							<span asp-validation-for="ProjectVersion" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="ProjectCreatedAt" class="control-label"></label>
+							<input asp-for="ProjectCreatedAt" class="form-control" />
+							<span asp-validation-for="ProjectCreatedAt" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="SelectedUserIds" class="control-label"></label>
+							<select asp-for="SelectedUserIds" class="form-control" asp-items="ViewBag.ProjectUsers"></select>
+						</div>
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary">Save</button>
+							<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Scripts {

@@ -4,81 +4,162 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="bug-list">
-            <h3>Current Bugs</h3>
-            <ul>
-                @foreach (var bug in Model.Bugs)
-                {
-                    <li class="bug-item" data-bugid="@bug.BugId">
-                        @bug.BugName
-                    </li>
-
-                    <!-- Display other bug properties as needed -->
-                    <li class="bug-item" data-bugid="@bug.BugId">
-                        @bug.BugName
-                    </li>
-                }
-            </ul>
+<div class="container project-container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="project-details card pb-2 pl-2 shadow">
+                <div class="card-header text-primary">
+                    <h4>Project</h4>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Project.ProjectName)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <div class="bg-white p-2">
+                                @Html.DisplayFor(model => model.Project.ProjectName)
+                            </div>
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Project.ProjectType)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <div class="bg-white p-2">
+                                @Html.DisplayFor(model => model.Project.ProjectType)
+                            </div>
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Project.ProjectDescription)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <div class="bg-white p-2">
+                                @Html.Raw(Model.Project.ProjectDescription)
+                            </div>
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Project.ProjectVersion)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <div class="bg-white p-2">
+                                @Html.DisplayFor(model => model.Project.ProjectVersion)
+                            </div>
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Project.ProjectCreatedAt)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <div class="bg-white p-2">
+                                @Html.DisplayFor(model => model.Project.ProjectCreatedAt)
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Edit" asp-route-id="@Model?.Project.ProjectID" class="btn btn-primary">Edit</a>
+                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="project-details">
-            <h4>Project</h4>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Project.ProjectName)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Project.ProjectName)
-                </dd>
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Project.ProjectType)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Project.ProjectType)
-                </dd>
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Project.ProjectDescription)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Project.ProjectDescription)
-                </dd>
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Project.ProjectVersion)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Project.ProjectVersion)
-                </dd>
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Project.ProjectCreatedAt)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Project.ProjectCreatedAt)
-                </dd>
-            </dl>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="bug-table">
+         
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Bug Name</th>
+                                <th>Severity</th>
+                                <th>Created On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var bug in Model.Bugs)
+                            {
+                                <tr>
+                                    <td>@bug.BugName</td>
+                                    <td>@bug.BugSeverity</td>
+                                    <td>@bug.BugCreatedAt.ToString("MMMM dd, yyyy")</td>
+                                    <td>
+                                        <a href="@Url.Action("ViewBug", "Bug", new { id = bug.BugId })" class="btn btn-primary btn-sm">View</a>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteBug(@bug.BugId)">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <!-- Pagination -->
+                    <nav aria-label="Bug table pagination">
+                        <ul class="pagination">
+                            <li class="page-item" id="prev-page">
+                                <a class="page-link" href="#">Previous</a>
+                            </li>
+                            <li class="page-item" id="next-page">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bug-list">
+                    @if (Model.Bugs.Count > 0)
+                    {
+                        foreach (var bug in Model.Bugs)
+                        {
+                            <div class="card mb-3 shadow pointer">
+                                <div class="card-header" data-toggle="collapse" data-target="#bugDetails-@bug.BugId">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h5 class="mb-0 text-primary">@bug.BugName</h5>
+                                        <div>
+                                            <span class="text-muted">Created on @bug.BugCreatedAt.ToString("MMMM dd, yyyy")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="bugDetails-@bug.BugId" class="collapse">
+                                    <div class="card-body">
+                                        <p class="card-text">@TruncateString(@bug.BugDescription,10)</p>
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <strong>Severity:</strong> @bug.BugSeverity
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    else
+                    {
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">No Tickets to Display</h6>
+                            </div>
+                            <div class="card-body">
+                                The issues relating to the project has been resolved.
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Project.ProjectID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@functions {
+    public static string TruncateString(string value, int maxLength)
+    {
+        if (string.IsNullOrEmpty(value))
+            return value;
 
-@section Scripts {
-    <script>
-        $(function () {
-            $('.bug-item').click(function () {
-                var bugId = $(this).data('bugid');
-                // Add your code to expand the bug card and show bug details
-                // You can use AJAX to fetch and display the bug details dynamically
-            });
-        });
-    </script>
+        return value.Length <= maxLength ? value : value.Substring(0, maxLength) + "...";
+    }
 }
+
+
 
