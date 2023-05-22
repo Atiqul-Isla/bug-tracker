@@ -44,5 +44,7 @@ namespace bug_tracker_web.Models
         public DbSet<Project> Projects { get; set; }
         public DbSet<Bug> Bugs { get; set; }
         public DbSet<DefaultUser> Users { get; set; }
+        public DbSet<ProjectUser> ProjectUsers { get; set; } // Add this line
+
     }
 }

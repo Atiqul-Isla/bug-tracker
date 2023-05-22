@@ -62,19 +62,26 @@ namespace bug_tracker_web.Controllers
             return View();
         }
 
-        // POST: Project/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,SelectedUserIds")] Project project)
         {
             if (ModelState.IsValid)
             {
-                // Populate ProjectUsers using SelectedUserIds
-                project.ProjectUsers = project.SelectedUserIds.Select(userId => new ProjectUser { UserId = userId }).ToList();
+                // Remove duplicates from the selected user IDs
+                var distinctUserIds = project.SelectedUserIds.Distinct().ToList();
 
-                // Save the project to the database
-                _context.Add(project);
+                // Add the project to the context
+                _context.Projects.Add(project);
                 await _context.SaveChangesAsync();
+
+                // Create a new instance of ProjectUser for each distinct user ID
+                var projectUsers = distinctUserIds.Select(userId => new ProjectUser { ProjectId = project.ProjectID, UserId = userId }).ToList();
+
+                // Add the project users to the context and save changes
+                _context.ProjectUsers.AddRange(projectUsers);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -84,7 +91,8 @@ namespace bug_tracker_web.Controllers
             return View(project);
         }
 
-        // GET: Project/Edit/5
+
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -92,20 +100,22 @@ namespace bug_tracker_web.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects.FindAsync(id);
+            var project = await _context.Projects.Include(p => p.ProjectUsers).FirstOrDefaultAsync(p => p.ProjectID == id);
             if (project == null)
             {
                 return NotFound();
             }
+
+            var users = _context.Users.ToList();
+            var selectedUserIds = project.ProjectUsers.Select(pu => pu.UserId).ToList();
+            ViewData["ProjectUsers"] = new MultiSelectList(users, "Id", "UserName", selectedUserIds);
+
             return View(project);
         }
 
-        // POST: Project/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectID,ProjectName,ProjectType,ProjectDescription,ProjectVersion,ProjectCreatedAt,SelectedUserIds")] Project project)
         {
             if (id != project.ProjectID)
             {
@@ -116,7 +126,20 @@ namespace bug_tracker_web.Controllers
             {
                 try
                 {
+                    // Remove duplicates from the selected user IDs
+                    var distinctUserIds = project.SelectedUserIds.Distinct().ToList();
+
+                    // Delete existing project users associated with the project
+                    var existingProjectUsers = _context.ProjectUsers.Where(pu => pu.ProjectId == project.ProjectID);
+                    _context.ProjectUsers.RemoveRange(existingProjectUsers);
+
+                    // Create a new instance of ProjectUser for each distinct user ID
+                    var projectUsers = distinctUserIds.Select(userId => new ProjectUser { ProjectId = project.ProjectID, UserId = userId }).ToList();
+
+                    // Update the project and add the new project users
                     _context.Update(project);
+                    _context.AddRange(projectUsers);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -132,6 +155,7 @@ namespace bug_tracker_web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(project);
         }
 
