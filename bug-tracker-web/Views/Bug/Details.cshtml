@@ -1,60 +1,44 @@
 ﻿@model bug_tracker_web.Models.Bug
 
-@{
-    ViewData["Title"] = "Details";
-}
+<div class="container">
+    <!-- Display bug details -->
+    <h2>Bug Details</h2>
+    <p>Bug Name: @Model.BugName</p>
+    <p>Bug Status: @Model.BugStatus</p>
+    <!-- Add other bug details you want to display -->
+    <!-- Display comments -->
+    <h3>Comments</h3>
+    @if (Model.Comments.Any())
+    {
+        <ul>
+            @foreach (var comment in Model.Comments)
+            {
+                <li>
+                    <p>@comment.CommentContent</p>
+                    <p>Posted By: @comment.User.FirstName @comment.User.LastName</p>
+                    <p>Posted At: @comment.CreatedAt</p>
+                    <!-- Edit button -->
+                    <a asp-controller="Bug" asp-action="EditComment" asp-route-id="@comment.Id">Edit</a>
+                    <!-- Delete button -->
+                    <a asp-controller="Bug" asp-action="DeleteComment" asp-route-id="@comment.Id">Delete</a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No comments found for this bug.</p>
+    }
 
-<h1>Details</h1>
+    <!-- Add comment form -->
+    <h3>Add Comment</h3>
+    <a asp-controller="Bug" asp-action="AddComment" asp-route-bugId="@Model.BugId" class="btn btn-primary">Add Comment</a>
+</div>
 
-<div>
-    <h4>Bug</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BugName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BugName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BugStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BugStatus)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BugSeverity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BugSeverity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BugCreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BugCreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BugCreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BugCreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BugDescription)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BugDescription)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Project)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Project.ProjectID)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.BugId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
+
+
+
+
+

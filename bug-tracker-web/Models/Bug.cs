@@ -4,6 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace bug_tracker_web.Models
 {
+    public enum BugSeverity
+    {
+        Low,
+        Moderate,
+        Important,
+        Critical
+    }
     public class Bug
     {
         [Key]
@@ -15,11 +22,7 @@ namespace bug_tracker_web.Models
         [Column(TypeName = "nvarchar(50)")]
         public string BugStatus { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
-        public string BugSeverity { get; set; }
-
-        [Column(TypeName = "nvarchar(50)")]
-        public string BugCreatedBy { get; set; }
+        public BugSeverity BugSeverity { get; set; }
 
         public DateTime BugCreatedAt { get; set; } = DateTime.Now;
 
@@ -34,5 +37,8 @@ namespace bug_tracker_web.Models
 
         [NotMapped]
         public List<string> SelectedUserIds { get; set; } = new List<string>();
+
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
     }
 }

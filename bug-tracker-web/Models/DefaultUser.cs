@@ -36,5 +36,7 @@ namespace bug_tracker_web.Models
 
         [InverseProperty("User")]
         public List<BugUser> BugUsers { get; set; }
+
+        public List<Comment> Comments { get; set; }
     }
 }

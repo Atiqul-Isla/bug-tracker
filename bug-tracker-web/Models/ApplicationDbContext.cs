@@ -39,12 +39,18 @@ namespace bug_tracker_web.Models
             builder.Entity<BugUser>().HasOne(b => b.Bug).WithMany(bu => bu.BugUsers).HasForeignKey(b => b.BugId);
             builder.Entity<BugUser>().HasOne(b => b.User).WithMany(bu => bu.BugUsers).HasForeignKey(b => b.UserId);
 
+            builder.Entity<Bug>().HasMany(b => b.Comments).WithOne(c => c.Bug).HasForeignKey(c => c.BugId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+
             base.OnModelCreating(builder);
         }
+
+  
+
         public DbSet<Project> Projects { get; set; }
         public DbSet<Bug> Bugs { get; set; }
         public DbSet<DefaultUser> Users { get; set; }
-        public DbSet<ProjectUser> ProjectUsers { get; set; } // Add this line
+        public DbSet<ProjectUser> ProjectUsers { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
     }
 }

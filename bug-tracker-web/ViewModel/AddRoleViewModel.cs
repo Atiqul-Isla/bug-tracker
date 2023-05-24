@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using bug_tracker_web.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace bug_tracker_web.ViewModel
 {
@@ -8,5 +9,7 @@ namespace bug_tracker_web.ViewModel
         [Required]
         [Display(Name ="Role Name")]
         public string RoleName { get; set; }
+
+        public List<DefaultUser> Users { get; set; }
     }
 }

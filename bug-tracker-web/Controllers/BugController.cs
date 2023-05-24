@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using bug_tracker_web.Models;
+using bug_tracker_web.ViewModel;
+using System.Security.Claims;
 
 namespace bug_tracker_web.Controllers
 {
@@ -29,14 +31,13 @@ namespace bug_tracker_web.Controllers
         // GET: Bug/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Bugs == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var bug = await _context.Bugs
-                .Include(b => b.Project)
-                .FirstOrDefaultAsync(m => m.BugId == id);
+            var bug = await _context.Bugs.Include(b => b.Comments).ThenInclude(c => c.User).FirstOrDefaultAsync(m => m.BugId == id);
+
             if (bug == null)
             {
                 return NotFound();
@@ -139,9 +140,7 @@ namespace bug_tracker_web.Controllers
                 return NotFound();
             }
 
-            var bug = await _context.Bugs
-                .Include(b => b.Project)
-                .FirstOrDefaultAsync(m => m.BugId == id);
+            var bug = await _context.Bugs.Include(b => b.Project).FirstOrDefaultAsync(m => m.BugId == id);
             if (bug == null)
             {
                 return NotFound();
@@ -173,5 +172,154 @@ namespace bug_tracker_web.Controllers
         {
           return (_context.Bugs?.Any(e => e.BugId == id)).GetValueOrDefault();
         }
+
+        // GET: Display the "Add Comment" form
+        [HttpGet]
+        public IActionResult AddComment(int bugId)
+        {
+            var commentModel = new CommentViewModel
+            {
+                BugId = bugId
+            };
+
+            return View(commentModel);
+        }
+
+        // POST: Process the submitted comment
+        [HttpPost]
+        public IActionResult AddComment(CommentViewModel commentModel)
+        {
+            // Check if the comment model is valid
+            
+            // Retrieve the user ID of the currently logged-in user
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Create a new Comment instance and populate its properties
+            var comment = new Comment
+            {
+                CommentContent = commentModel.CommentContent,
+                BugId = commentModel.BugId,
+                UserId = userId
+            };
+
+            // Code to add the comment to the database
+            _context.Comments.Add(comment); // Assuming _context is your database context
+            _context.SaveChanges();
+
+            // Redirect to the appropriate page
+            return RedirectToAction("Details", "Bug", new { id = commentModel.BugId });
+            
+
+            // If the comment model is not valid, return to the same view with the validation errors
+            return View(commentModel);
+        }
+
+        // GET: Bug/EditComment/5
+        public async Task<IActionResult> EditComment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var comment = await _context.Comments.FindAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            // Pass the comment to the view for editing
+            return View(comment);
+        }
+
+        private bool CommentExists(int id)
+        {
+            return _context.Comments.Any(c => c.Id == id);
+        }
+
+        // POST: Bug/EditComment/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditComment(int id, [Bind("Id,CommentContent")] Comment comment)
+        {
+            if (id != comment.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(comment);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CommentExists(comment.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Details", new { id = comment.BugId });
+            }
+
+            // If the model state is invalid, return to the edit view with the comment
+            return View(comment);
+        }
+
+        // GET: Bug/DeleteComment/5
+        public async Task<IActionResult> DeleteComment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var comment = await _context.Comments.FindAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            var commentViewModel = new CommentViewModel
+            {
+                Id = comment.Id, // Set the desired Id value
+                CommentContent = comment.CommentContent,
+                BugId = comment.BugId,
+                UserId = comment.UserId
+            };
+
+            // Pass the commentViewModel to the view for confirmation
+            return View(commentViewModel);
+        }
+
+        [HttpPost, ActionName("DeleteComment")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCommentConfirmed(int id)
+        {
+            var comment = await _context.Comments.FindAsync(id);
+            
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            var commentViewModel = new CommentViewModel
+            {
+                CommentContent = comment.CommentContent,
+                BugId = comment.BugId,
+                UserId = comment.UserId
+            };
+
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "Bug", new { id = commentViewModel.BugId });
+        }
+
     }
 }

@@ -1,0 +1,15 @@
+﻿@model bug_tracker_web.ViewModel.CommentViewModel
+
+<div class="container">
+    <h2>Add Comment</h2>
+
+    <form method="post" asp-action="AddComment" asp-controller="Bug">
+        <input type="hidden" asp-for="BugId" />
+        <div class="form-group">
+            <label asp-for="CommentContent"></label>
+            <textarea asp-for="CommentContent" class="form-control"></textarea>
+            <span asp-validation-for="CommentContent" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Comment</button>
+    </form>
+</div>

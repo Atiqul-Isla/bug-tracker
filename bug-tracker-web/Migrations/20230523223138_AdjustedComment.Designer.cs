@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bug_tracker_web.Models;
 
@@ -11,9 +12,10 @@ using bug_tracker_web.Models;
 namespace bug_tracker_web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230523223138_AdjustedComment")]
+    partial class AdjustedComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,7 +224,7 @@ namespace bug_tracker_web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("BugId")
+                    b.Property<int?>("BugId")
                         .HasColumnType("int");
 
                     b.Property<string>("CommentContent")
@@ -232,15 +234,9 @@ namespace bug_tracker_web.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BugId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -435,19 +431,9 @@ namespace bug_tracker_web.Migrations
                 {
                     b.HasOne("bug_tracker_web.Models.Bug", "Bug")
                         .WithMany("Comments")
-                        .HasForeignKey("BugId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("bug_tracker_web.Models.DefaultUser", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BugId");
 
                     b.Navigation("Bug");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -511,8 +497,6 @@ namespace bug_tracker_web.Migrations
             modelBuilder.Entity("bug_tracker_web.Models.DefaultUser", b =>
                 {
                     b.Navigation("BugUsers");
-
-                    b.Navigation("Comments");
 
                     b.Navigation("ProjectUsers");
                 });

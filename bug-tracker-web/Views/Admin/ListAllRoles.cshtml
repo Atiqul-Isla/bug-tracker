@@ -1,34 +1,85 @@
-﻿@using Microsoft.AspNetCore.Identity
-@model IEnumerable<IdentityRole>
+﻿@model bug_tracker_web.ViewModel.ListAllRolesViewModel
 
 @{
     ViewData["Title"] = "All Roles";
 }
 
-<h1>All Roles</h1>
-<a class="btn btn-primary mb-2" asp-action="AddRole">Add Role</a>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <h2 class="d-inline-block">All Roles</h2>
+            <a class="btn btn-primary mb-2 ml-2" asp-action="AddRole"><i class="bi bi-plus"></i></a>
+            <div class="card shadow">
+                <div class="card-body">
+                    @if (Model.Roles.Any())
+                    {
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Role</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var role in Model.Roles)
+                                {
+                                    <tr>
+                                        <td>@role.Name</td>
+                                        <td class="text-center">
+                                            <a asp-action="EditRole" asp-route-id="@role.Id" class="btn btn-outline-primary btn-sm"><i class="bi bi-pencil"></i></a>
+                                            <a asp-action="DeleteRole" asp-route-id="@role.Id" class="btn btn-outline-primary btn-sm"><i class="bi bi-x"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <h5>No roles yet. Use the button above to add your first role.</h5>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card shadow">
+                <div class="card-body">
+                    @if (Model.Users.Any())
+                    {
+                        <h3>My Personnel</h3>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Roles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model.Users)
+                                {
+                                    <tr>
+                                        <td>@user.FirstName @user.LastName</td>
+                                        <td>
+                                            @foreach (var role in Model.UserManager.GetRolesAsync(user).Result)
+                                            {
+                                                <span class="badge badge-primary">@role</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <h5>No users found.</h5>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-@if (Model.Any()){
-    <table class="table col-3">
-        <thead>
-            <tr>
-                <td><h5>Role</h5></td>
-            </tr>
-        </thead>
-        @foreach (var role in Model)
-        {
-            <tbody>
-                <tr>
-                    <td>@role.Name</td>
-                    <td class="text-center">
-                        <a href="#" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="#" class="btn btn-primary btn-sm">Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        }
-    </table>
-}
-else{
-    <h5>No roles yet, use the button above to add your first role</h5>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

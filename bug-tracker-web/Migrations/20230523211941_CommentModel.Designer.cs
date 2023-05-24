@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bug_tracker_web.Models;
 
@@ -11,9 +12,10 @@ using bug_tracker_web.Models;
 namespace bug_tracker_web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230523211941_CommentModel")]
+    partial class CommentModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,6 +76,31 @@ namespace bug_tracker_web.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("BugUser");
+                });
+
+            modelBuilder.Entity("bug_tracker_web.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("BugId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CommentContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BugId");
+
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("bug_tracker_web.Models.DefaultUser", b =>
@@ -212,37 +239,6 @@ namespace bug_tracker_web.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ProjectUsers");
-                });
-
-            modelBuilder.Entity("Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("BugId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CommentContent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BugId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -412,6 +408,15 @@ namespace bug_tracker_web.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("bug_tracker_web.Models.Comment", b =>
+                {
+                    b.HasOne("bug_tracker_web.Models.Bug", "Bug")
+                        .WithMany("Comments")
+                        .HasForeignKey("BugId");
+
+                    b.Navigation("Bug");
+                });
+
             modelBuilder.Entity("bug_tracker_web.Models.ProjectUser", b =>
                 {
                     b.HasOne("bug_tracker_web.Models.Project", "Project")
@@ -427,25 +432,6 @@ namespace bug_tracker_web.Migrations
                         .IsRequired();
 
                     b.Navigation("Project");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Comment", b =>
-                {
-                    b.HasOne("bug_tracker_web.Models.Bug", "Bug")
-                        .WithMany("Comments")
-                        .HasForeignKey("BugId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("bug_tracker_web.Models.DefaultUser", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Bug");
 
                     b.Navigation("User");
                 });
@@ -511,8 +497,6 @@ namespace bug_tracker_web.Migrations
             modelBuilder.Entity("bug_tracker_web.Models.DefaultUser", b =>
                 {
                     b.Navigation("BugUsers");
-
-                    b.Navigation("Comments");
 
                     b.Navigation("ProjectUsers");
                 });
