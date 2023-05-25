@@ -16,7 +16,7 @@ namespace bug_tracker_web.Models
         [Display(Name = "Type")]
         public string ProjectType { get; set; }
 
-        [Column(TypeName = "nvarchar(300)")]
+        [Column(TypeName = "nvarchar(2000)")]
         [Display(Name = "Description")]
         public string? ProjectDescription { get; set; }
 

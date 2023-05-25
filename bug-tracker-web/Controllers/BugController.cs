@@ -49,7 +49,7 @@ namespace bug_tracker_web.Controllers
         // GET: Bug/Create
         public IActionResult Create()
         {
-            ViewData["ProjectID"] = new SelectList(_context.Projects, "ProjectID", "ProjectID");
+            ViewData["ProjectID"] = new SelectList(_context.Projects, "ProjectID", "ProjectName");
             var users = _context.Users.ToList();
             ViewData["BugUsers"] = new MultiSelectList(users, "Id", "UserName");
             return View();
@@ -60,24 +60,24 @@ namespace bug_tracker_web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BugId,BugName,BugStatus,BugSeverity,BugCreatedBy,BugCreatedAt,BugDescription,ProjectID, SelectedUserIds")] Bug bug)
+        public async Task<IActionResult> Create([Bind("BugId,BugName,BugStatus,BugSeverity,BugCreatedBy,BugCreatedAt,BugDescription,ProjectID,SelectedUserIds")] Bug bug)
         {
-           
-
             // Populate ProjectUsers using SelectedUserIds
             bug.BugUsers = bug.SelectedUserIds.Select(userId => new BugUser { UserId = userId }).ToList();
 
+          
             _context.Add(bug);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-      
+       
 
-            ViewData["ProjectID"] = new SelectList(_context.Projects, "ProjectID", "ProjectID", bug.ProjectID);
+            ViewData["ProjectID"] = new SelectList(_context.Projects, "ProjectID", "ProjectName", bug.ProjectID);
             var users = _context.Users.ToList();
             ViewData["BugUsers"] = new MultiSelectList(users, "Id", "UserName");
 
             return View(bug);
         }
+
 
         // GET: Bug/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -87,12 +87,17 @@ namespace bug_tracker_web.Controllers
                 return NotFound();
             }
 
-            var bug = await _context.Bugs.FindAsync(id);
+            var bug = await _context.Bugs.Include(b => b.BugUsers).FirstOrDefaultAsync(b => b.BugId == id);
             if (bug == null)
             {
                 return NotFound();
             }
+
+            var users = _context.Users.ToList();
+            var selectedUserIds = bug.BugUsers.Select(pu => pu.UserId).ToList();
+
             ViewData["ProjectID"] = new SelectList(_context.Projects, "ProjectID", "ProjectID", bug.ProjectID);
+            ViewData["BugUsers"] = new MultiSelectList(users, "Id", "UserName", selectedUserIds);
             return View(bug);
         }
 
@@ -101,33 +106,44 @@ namespace bug_tracker_web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BugId,BugName,BugStatus,BugSeverity,BugCreatedBy,BugCreatedAt,BugDescription,ProjectID")] Bug bug)
+        public async Task<IActionResult> Edit(int id, [Bind("BugId,BugName,BugStatus,BugSeverity,BugCreatedBy,BugCreatedAt,BugDescription,ProjectID, SelectedUserIds")] Bug bug)
         {
             if (id != bug.BugId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+           
+            try
             {
-                try
-                {
-                    _context.Update(bug);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BugExists(bug.BugId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                // Remove duplicates from the selected user IDs
+                var distinctUserIds = bug.SelectedUserIds.Distinct().ToList();
+
+                // Delete existing project users associated with the project
+                var existingBugUsers = _context.BugUsers.Where(pu => pu.BugId == bug.BugId);
+                _context.BugUsers.RemoveRange(existingBugUsers);
+
+                // Create a new instance of ProjectUser for each distinct user ID
+                var bugUsers = distinctUserIds.Select(userId => new BugUser { BugId = bug.BugId, UserId = userId }).ToList();
+
+                _context.Update(bug);
+                _context.AddRange(bugUsers);
+                await _context.SaveChangesAsync();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!BugExists(bug.BugId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+            
             ViewData["ProjectID"] = new SelectList(_context.Projects, "ProjectID", "ProjectID", bug.ProjectID);
             return View(bug);
         }

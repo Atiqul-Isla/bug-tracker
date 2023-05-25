@@ -14,7 +14,7 @@
 						<div class="card shadow-2-strong mb-4" style="background-color: #f5f7fa;">
 							<div class="card-body">
 								<div class="d-flex justify-content-between align-items-center mb-4">
-									<h2 class="mb-0">My Projects</h2>
+									<h2 class="mb-0">My Tickets</h2>
 									<div class="d-flex align-items-center">
 										<div class="input-group me-2">
 											<button class="btn btn-outline-secondary" type="button">
@@ -46,9 +46,6 @@
 													@Html.DisplayNameFor(model => model.BugCreatedAt)
 												</th>
 												<th>
-													@Html.DisplayNameFor(model => model.BugDescription)
-												</th>
-												<th>
 													@Html.DisplayNameFor(model => model.Project)
 												</th>
 												<th>
@@ -74,16 +71,13 @@
 														@Html.DisplayFor(modelItem => item.BugCreatedAt)
 													</td>
 													<td>
-														@Html.DisplayFor(modelItem => item.BugDescription)
-													</td>
-													<td>
-														@Html.DisplayFor(modelItem => item.Project.ProjectID)
+														@Html.DisplayFor(modelItem => item.Project.ProjectName)
 													</td>
 													<td>
 														<ul>
 															@foreach (var bugUser in item.BugUsers)
 															{
-																<li>@bugUser.User.UserName</li>
+																<li>@bugUser.User.FirstName @bugUser.User.LastName</li>
 															}
 														</ul>
 													</td>

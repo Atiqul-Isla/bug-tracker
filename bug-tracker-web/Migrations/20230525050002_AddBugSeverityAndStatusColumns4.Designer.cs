@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bug_tracker_web.Models;
 
@@ -11,9 +12,10 @@ using bug_tracker_web.Models;
 namespace bug_tracker_web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230525050002_AddBugSeverityAndStatusColumns4")]
+    partial class AddBugSeverityAndStatusColumns4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,7 +75,7 @@ namespace bug_tracker_web.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BugUsers");
+                    b.ToTable("BugUser");
                 });
 
             modelBuilder.Entity("bug_tracker_web.Models.DefaultUser", b =>

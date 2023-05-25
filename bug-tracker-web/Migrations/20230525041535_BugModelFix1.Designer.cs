@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bug_tracker_web.Models;
 
@@ -11,9 +12,10 @@ using bug_tracker_web.Models;
 namespace bug_tracker_web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230525041535_BugModelFix1")]
+    partial class BugModelFix1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,13 +43,11 @@ namespace bug_tracker_web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("BugSeverity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("BugSeverity")
+                        .HasColumnType("int");
 
-                    b.Property<string>("BugStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("BugStatus")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProjectID")
                         .HasColumnType("int");
@@ -73,7 +73,7 @@ namespace bug_tracker_web.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BugUsers");
+                    b.ToTable("BugUser");
                 });
 
             modelBuilder.Entity("bug_tracker_web.Models.DefaultUser", b =>

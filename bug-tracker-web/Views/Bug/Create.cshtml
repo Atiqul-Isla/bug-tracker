@@ -5,62 +5,67 @@
 }
 
 <div class="container">
-	<div class="edit-page  border rounded p-4" style="background-color: #f5f7fa;">
-		<h1 class="mb-4">Create</h1>
+    <div class="edit-page border rounded p-4" style="background-color: #f5f7fa;">
+        <h1 class="mb-4">Create</h1>
 
-		<div class="project-details">
-			<hr />
+        <div class="project-details">
+            <hr />
 
-			<div class="row">
-				<div class="col-md-6">
-					<form asp-action="Create">
-						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-						<div class="form-group">
-							<label asp-for="BugName" class="control-label"></label>
-							<input asp-for="BugName" class="form-control" />
-							<span asp-validation-for="BugName" class="text-danger"></span>
-						</div>
-						<div class="form-group">
-							<label asp-for="BugStatus" class="control-label"></label>
-							<input asp-for="BugStatus" class="form-control" />
-							<span asp-validation-for="BugStatus" class="text-danger"></span>
-						</div>
-						<div class="form-group">
-							<label asp-for="BugSeverity" class="control-label"></label>
-							<select asp-for="BugSeverity" class="form-control">
-								<option value="Low">Low</option>
-								<option value="Moderate">Moderate</option>
-								<option value="Important">Important</option>
-								<option value="Critical">Critical</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label asp-for="BugCreatedAt" class="control-label"></label>
-							<input asp-for="BugCreatedAt" class="form-control" />
-							<span asp-validation-for="BugCreatedAt" class="text-danger"></span>
-						</div>
-						<div class="form-group">
-							<label asp-for="BugDescription" class="control-label"></label>
-							<input asp-for="BugDescription" class="form-control" />
-							<span asp-validation-for="BugDescription" class="text-danger"></span>
-						</div>
-						<div class="form-group">
-							<label asp-for="ProjectID" class="control-label"></label>
-							<select asp-for="ProjectID" class="form-control" asp-items="ViewBag.ProjectID"></select>
-						</div>
-						<div class="form-group">
-							<label asp-for="SelectedUserIds" class="control-label"></label>
-							<select asp-for="SelectedUserIds" class="form-control" asp-items="ViewBag.BugUsers"></select>
-						</div>
-						<div class="form-group">
-							<button type="submit" class="btn btn-primary">Save</button>
-							<a asp-action="Index" class="btn btn-secondary">Back to List</a>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+            <div class="row">
+                <div class="col-md-6">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="BugName" class="control-label"></label>
+                            <input asp-for="BugName" class="form-control" />
+                            <span asp-validation-for="BugName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="BugStatus" class="control-label"></label>
+                            <select asp-for="BugStatus" class="form-control">
+                                <option value="Issued">Issued</option>
+                                <option value="Closed" disabled>Closed</option>
+                                <option value="Abandoned" disabled>Abandoned</option>
+                            </select>
+                            <span asp-validation-for="BugStatus" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="BugSeverity" class="control-label"></label>
+                            <select asp-for="BugSeverity" class="form-control">
+                                <option value="Low">Low</option>
+                                <option value="Moderate">Moderate</option>
+                                <option value="Important">Important</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="BugCreatedAt" class="control-label"></label>
+                            <input asp-for="BugCreatedAt" class="form-control" />
+                            <span asp-validation-for="BugCreatedAt" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="BugDescription" class="control-label"></label>
+                            <textarea asp-for="BugDescription" class="form-control"></textarea>
+                            <span asp-validation-for="BugDescription" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ProjectID" class="control-label"></label>
+                            <select asp-for="ProjectID" class="form-control" asp-items="ViewBag.ProjectID"></select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SelectedUserIds" class="control-label"></label>
+                            <select asp-for="SelectedUserIds" class="form-control" asp-items="ViewBag.BugUsers"></select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

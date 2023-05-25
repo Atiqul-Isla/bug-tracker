@@ -4,35 +4,34 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace bug_tracker_web.Models
 {
-    public enum BugSeverity
-    {
-        Low,
-        Moderate,
-        Important,
-        Critical
-    }
+   
     public class Bug
     {
         [Key]
         public int BugId { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
+        [Display(Name = "Ticket Name")]
         public string BugName { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
-        public string BugStatus { get; set; }
+		[Display(Name = "Status")]
+		public string BugStatus { get; set; } // Change the type to string
 
-        public BugSeverity BugSeverity { get; set; }
+		[Display(Name = "Severity")]
+		public string BugSeverity { get; set; } // Change the type to string
 
+		[Display(Name = "Date")]
         public DateTime BugCreatedAt { get; set; } = DateTime.Now;
 
-        [Column(TypeName = "nvarchar(500)")]
+        [Column(TypeName = "nvarchar(2000)")]
+        [Display(Name = "Description")]
         public string BugDescription { get; set; }
 
         //Relationships
-        public int? ProjectID { get; set; }
+        public int ProjectID { get; set; }
         public Project Project { get; set; }
 
+        [Display(Name = "Users")]
         public List<BugUser> BugUsers { get; set; }
 
         [NotMapped]
