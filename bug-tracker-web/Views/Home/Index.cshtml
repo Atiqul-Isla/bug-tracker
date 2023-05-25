@@ -1,75 +1,92 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using bug_tracker_web.Models
-
-@inject SignInManager<DefaultUser> SignInManager
-@inject UserManager<DefaultUser> UserManager
+﻿@model bug_tracker_web.ViewModel.HomeViewModel
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Bug Tracker Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (User.Identity.IsAuthenticated)
-{
-    var user = await UserManager.GetUserAsync(User);
-    <div class="container-fluid pb-4">
-        <h1 class="display-4"><strong>Welcome, @user.FirstName!</strong></h1>
-    </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <!-- Card content for stats -->
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <!-- Card content for stats -->
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <!-- Card content for stats -->
-                    </div>
+<div class="container">
+    <h1>Bug Tracker Dashboard</h1>
+
+    <!-- Cards -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Projects</h5>
+                    <p class="card-text">@Model.TotalProjects</p>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <!-- Chart content -->
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <!-- Chart content -->
-                    </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tickets Pending</h5>
+                    <p class="card-text">@Model.TotalBugs</p>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <!-- Table content -->
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <!-- Table content -->
-                    </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Critical Ticket Comments</h5>
+                    <p class="card-text">@Model.TotalComments</p>
                 </div>
             </div>
         </div>
     </div>
-    
-}
+
+    <!-- Charts -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Bugs Over Time</h5>
+                    <canvas id="bugChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Most Bugs by Project</h5>
+                    <canvas id="projectChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personnel Table -->
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <h2>Personnel</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Work Type</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>Zip Code</th>
+                        <th>Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Personnel)
+                    {
+                        <tr>
+                            <td>@user.FirstName</td>
+                            <td>@user.LastName</td>
+                            <td>@user.WorkType</td>
+                            <td>@user.Address</td>
+                            <td>@user.City</td>
+                            <td>@user.ZipCode</td>
+                            <td>@(user.IsOnline ? "Active" : "Inactive")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
