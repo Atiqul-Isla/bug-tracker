@@ -90,3 +90,102 @@
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Bug Chart
+        var bugChartCanvas = document.getElementById('bugChart').getContext('2d');
+        var bugChart = new Chart(bugChartCanvas, {
+            type: 'line',
+            data: {
+               labels: [
+                    @foreach (var bugDate in Model.BugsOverTime)
+                    {
+                        <text>"@bugDate",</text>
+                    }
+                ],
+
+                datasets: [
+                    {
+                        label: 'Bugs',
+                        data: [
+                            @foreach (var bugDate in Model.BugsOverTime)
+                            {
+                                <text>"@bugDate",</text>
+                            }
+                        ],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }
+                ]
+
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Bugs'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Project Chart
+        var projectChartCanvas = document.getElementById('projectChart').getContext('2d');
+        var projectChart = new Chart(projectChartCanvas, {
+            type: 'pie',
+            data: {
+                labels: ["@Model.ProjectsWithMostBugs.ProjectName"],
+                datasets: [
+                    {
+                        data: [@Model.ProjectsWithMostBugs.Bugs.Count],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ]
+                    }
+                ]
+            },
+
+                options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+}
+
+
+
+
+
+
+
+}

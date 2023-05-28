@@ -22,11 +22,16 @@ namespace bug_tracker_web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<DefaultUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<DefaultUser> _userManager;
 
-        public LoginModel(SignInManager<DefaultUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(
+              SignInManager<DefaultUser> signInManager,
+              ILogger<LoginModel> logger,
+              UserManager<DefaultUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -116,6 +121,14 @@ namespace bug_tracker_web.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    // Find the user by email
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+
+                    // Update the IsOnline property to true
+                    user.IsOnline = true;
+                    await _userManager.UpdateAsync(user);
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
